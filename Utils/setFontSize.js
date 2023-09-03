@@ -10,10 +10,7 @@ const DEFAULT_H5_PAGE_WIDTH = 375;
 const DEFAULT_H5_FONT_SIZE = 16;
 
 
-function setFontSize(pageConfig, isEditor) {
-    if (!pageConfig.isH5Page) {
-        return;
-    }
+function setFontSize(isEditor) {
     const html = document.getElementsByTagName('html')[0];
     if (!html) {
         return;
