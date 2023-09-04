@@ -1,5 +1,5 @@
 /**
- * @Description: 用于解决滚动穿透问题
+ * @file 用于解决滚动穿透问题
  */
 
 import {getScrollTop} from './getScrollTop';

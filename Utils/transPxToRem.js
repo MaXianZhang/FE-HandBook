@@ -1,3 +1,7 @@
+/**
+ * @file: UE给的稿用px转成系统里的rem，以此为基础可以扩展带倍率之类的稿子
+ */
+
 // 默认的h5基准的font-size
 const DEFAULT_H5_FONT_SIZE = 16;
 

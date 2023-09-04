@@ -1,7 +1,5 @@
-/** 给 h5 html设置font-size
- *
- * @param pageConfig
- * @param isEditor 是否是编辑器环境
+/** 
+ * @file 给 h5 html设置font-size
  */
 
 // 默认的H5页面的宽度

@@ -1,5 +1,5 @@
 /**
- * @Description: 获取滚动条在Y轴上滚动的距离
+ * @file: 获取滚动条在Y轴上滚动的距离
  */
 
 export const getScrollTop = () => {
