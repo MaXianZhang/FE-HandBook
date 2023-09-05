@@ -151,4 +151,41 @@ class MyPromise<T> {
             });
         });
     }
+
+    static raceWithNumber<T>(promises: Array<T | PromiseLike<T>> = [], num = 1): any {
+        let index = 0;
+        let stack = {};
+        return new MyPromise((resolve, reject) => {
+            promises.forEach((promise, j) => {
+                MyPromise.resolve(promise).then(val => {
+                    index++;
+                    stack[j] = val
+                    if (index == num) {
+                        resolve(Object.values(stack));
+                    }
+                }, (e) => {
+                    reject(e)
+                })
+            })
+        })
+    }
+
+    static limitGreedy<T> (promises: Array<T | PromiseLike<T>> = [], limit): any {
+        // 维护数组，每项完成时返回索引
+        const limitPromises = promises
+            .splice(0, limit)
+            .map(
+                (promise, index) => promise.then(() => index)
+            );
+    
+        return promises.reduce((prePromise, curPromise) => 
+            prePromise
+                .then(() => Promise.race(limitPromises))
+                .then(finishIndex => {
+                    // 将索引对应的promise替换，索引接上
+                    limitPromises[finishIndex] = curPromise(finishIndex).then(() => finishIndex)
+                }),
+            Promise.resolve()
+        ).then(() => Promise.all(limitPromises))
+    }
 }
