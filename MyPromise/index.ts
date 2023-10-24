@@ -170,22 +170,27 @@ class MyPromise<T> {
         })
     }
 
-    static limitGreedy<T> (promises: Array<T | PromiseLike<T>> = [], limit): any {
-        // 维护数组，每项完成时返回索引
-        const limitPromises = promises
-            .splice(0, limit)
-            .map(
-                (promise, index) => promise.then(() => index)
-            );
-    
-        return promises.reduce((prePromise, curPromise) => 
-            prePromise
-                .then(() => Promise.race(limitPromises))
+    static limitGreedy(tasks: Array<Function> = [], limit): void {
+        // 执行task并返回窗口号
+        const taskWrapper = (task, index) => {
+            // 执行task并兜底非promise的值
+            return Promise.resolve(task?.()).then(res => {
+                console.log(res, index);
+
+                return index;
+            })
+        }
+        // 截取窗口
+        const raceList = tasks.splice(0, limit).map(taskWrapper);
+
+        tasks.reduce((pre, curTask) => {
+            return pre
+                // 替换执行最快的窗口号
+                .then(() => Promise.race(raceList))
                 .then(finishIndex => {
-                    // 将索引对应的promise替换，索引接上
-                    limitPromises[finishIndex] = curPromise(finishIndex).then(() => finishIndex)
-                }),
-            Promise.resolve()
-        ).then(() => Promise.all(limitPromises))
+                    raceList[finishIndex] = taskWrapper(curTask, finishIndex)
+                })
+
+        }, Promise.resolve())
     }
 }
